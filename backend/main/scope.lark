@@ -1,0 +1,26 @@
+start: scope
+
+scope: resourcescope ( " " resourcescope )*
+
+resourcescope: resourcetype ":" resourcename ":" ACTION ( "," ACTION )*
+
+resourcetype: RESOURCETYPEVALUE ( "(" RESOURCETYPEVALUE ")")?
+
+RESOURCETYPEVALUE: /[a-z0-9]+/
+
+resourcename: (hostname "/")? component ( "/" component)*
+
+hostname: HOSTCOMPONENT ( "." HOSTCOMPONENT )* ( ":" PORTNUMBER)?
+
+HOSTCOMPONENT: /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]/
+             | /[a-zA-Z0-9]/
+
+PORTNUMBER: /[0-9]+/
+
+ACTION: /[a-z*]+/
+
+component: ALPHANUMERIC ( SEPARATOR ALPHANUMERIC )*
+
+ALPHANUMERIC: /[a-z0-9]+/
+
+SEPARATOR: /[_.]|__|[-]+/

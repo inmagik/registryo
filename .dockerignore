@@ -1,0 +1,10 @@
+data
+backend/env/
+backend/**/__pycache__/
+backend/*.pem
+backend/*.sqlite3
+backend/docker_registry_ui/localsettings.py
+client/node_modules
+client/public
+client/src
+client/.eslintcache

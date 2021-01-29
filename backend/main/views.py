@@ -223,10 +223,13 @@ class CatalogView(APIView):
         repositories = response.json()["repositories"]
         visible_repositories = []
         for repo in repositories:
-            access_right = assert_scope(
-                {"type": "repository", "name": repo, "actions": ["pull"]},
-                request.user,
-            )
+            if request.user.is_staff:
+                access_right = ["pull"]
+            else:
+                access_right = assert_scope(
+                    {"type": "repository", "name": repo, "actions": ["pull"]},
+                    request.user,
+                )
             if "pull" in access_right:
                 visible_repositories.append(repo)
         return Response(
@@ -243,6 +246,7 @@ class TagsView(APIView):
         token = emit_registry_token(
             [{"type": "repository", "name": repo_name, "actions": ["pull"]}],
             request.user,
+            skip_check=request.user.is_staff
         )
         response = requests.get(
             url, headers={"Authorization": f"Bearer {token}"}
@@ -255,21 +259,27 @@ class ManifestView(APIView):
 
     def get(self, request, repo_name=None, ref_name=None, *args, **kwargs):
         url = f"{settings.JWT_REGISTRY_URL}/{repo_name}/manifests/{ref_name}"
-        token = emit_registry_token(
+        token_v1 = emit_registry_token(
             [{"type": "repository", "name": repo_name, "actions": ["pull"]}],
             request.user,
+            skip_check=request.user.is_staff
+        )
+        token_v2 = emit_registry_token(
+            [{"type": "repository", "name": repo_name, "actions": ["pull"]}],
+            request.user,
+            skip_check=request.user.is_staff
         )
         response_v1 = requests.get(
             url,
             headers={
-                "Authorization": f"Bearer {token}",
+                "Authorization": f"Bearer {token_v1}",
                 "Accept": "application/vnd.docker.distribution.manifest.v1+json",
             },
         )
         response_v2 = requests.get(
             url,
             headers={
-                "Authorization": f"Bearer {token}",
+                "Authorization": f"Bearer {token_v2}",
                 "Accept": "application/vnd.docker.distribution.manifest.v2+json",
             },
         )

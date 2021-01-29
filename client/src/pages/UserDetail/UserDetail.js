@@ -11,6 +11,7 @@ import ChangePasswordModal from "../../components/ChangePasswordModal"
 import useModalTrigger from "magik-react-hooks/useModalTrigger"
 import { useTranslation } from "react-i18next"
 import ConfirmUserDeleteModal from "../../components/ConfirmUserDeleteModal"
+import { Trans } from "react-i18next"
 
 const DEFAULT_ACL = { type: "repository", name: "*", actions: "pull" }
 
@@ -144,7 +145,7 @@ export default function UserDetail({ match, history }) {
                   </div>
                   <div className="d-flex flex-row justify-content-start align-items-center mb-2 ">
                     <label htmlFor="is-staff-input" className="flex-1 m-0">
-                      <b className="mr-2">{t("Admin role")}:</b>
+                      <b className="mr-2">{t("Admin role")}*:</b>
                     </label>
                     <div className="flex-4">
                       <Field
@@ -183,13 +184,6 @@ export default function UserDetail({ match, history }) {
                 </tr>
               </thead>
               <tbody>
-                {user.is_staff && (
-                  <tr>
-                    <td>*</td>
-                    <td>{ActionNames["pull,push"]}</td>
-                    <td />
-                  </tr>
-                )}
                 {user.acl.map((entry) => (
                   <tr key={entry.id}>
                     <td>{entry.name}</td>
@@ -261,6 +255,15 @@ export default function UserDetail({ match, history }) {
                 </tr>
               </tbody>
             </Table>
+            <p style={{ fontStyle: "italic", fontSize: "small" }}>
+              (*){" "}
+              <Trans i18nKey="adminRoleExplanation" t={t}>
+                Admin role allows to manage users and permissions as well as to
+                see the entire docker registry content without regard of own
+                permissions. Push and pull operations instead require a proper
+                permission to be given even to admin users.
+              </Trans>
+            </p>
           </div>
         )}
         {showPasswordModalMounted && (

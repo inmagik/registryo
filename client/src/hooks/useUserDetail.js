@@ -13,6 +13,12 @@ export const UserDetailRj = rj({
       },
       updater: "updateData",
     },
+    remove: {
+      effect: (token) => (userId) => {
+        return api.auth(token).delete(`/user/${userId}`)
+      },
+      updater: state => state,
+    },
     changeMyPassword: {
       effect: (token) => (oldPassword, newPassword) => {
         return api.auth(token).post(`/me/change-password/`, {

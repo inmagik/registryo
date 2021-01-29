@@ -10,6 +10,7 @@ import { Field, Formik } from "formik"
 import ChangePasswordModal from "../../components/ChangePasswordModal"
 import useModalTrigger from "magik-react-hooks/useModalTrigger"
 import { useTranslation } from "react-i18next"
+import ConfirmUserDeleteModal from "../../components/ConfirmUserDeleteModal"
 
 const DEFAULT_ACL = { type: "repository", name: "*", actions: "pull" }
 
@@ -22,13 +23,13 @@ function CheckField({ field, form, ...props }) {
   return <Form.Check {...props} checked={value} {...other} />
 }
 
-export default function UserDetail({ match }) {
+export default function UserDetail({ match, history }) {
   const userId = match.params.id
   const { user: me } = useAuthUser()
 
   const [
     { data: user },
-    { update, addAcl, removeAcl, changeMyPassword },
+    { update, remove, addAcl, removeAcl, changeMyPassword },
   ] = useUserDetail(userId)
 
   const [addingAcl, setAddingAcl] = useState(DEFAULT_ACL)
@@ -39,6 +40,14 @@ export default function UserDetail({ match }) {
       open: openPasswordModal,
       close: closePasswordModal,
       onClosed: onPasswordModalClosed,
+    },
+  ] = useModalTrigger()
+  const [
+    { isOpen: showDeleteModal, value: deleteModalMounted },
+    {
+      open: openDeleteModal,
+      close: closeDeleteModal,
+      onClosed: onDeleteModalClosed,
     },
   ] = useModalTrigger()
   const [passwordChangeError, setPasswordChangeError] = useState(null)
@@ -66,6 +75,15 @@ export default function UserDetail({ match }) {
                   onClick={() => openPasswordModal("dummy")}
                 >
                   {t("Change password")}
+                </Button>
+              )}
+              {me.id !== user.id && (
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => openDeleteModal("dummy")}
+                >
+                  {t("Delete user")}
                 </Button>
               )}
             </div>
@@ -260,7 +278,9 @@ export default function UserDetail({ match }) {
                   if (err?.response?.old_password) {
                     setPasswordChangeError(t("Bad old password"))
                   } else {
-                    setPasswordChangeError(t("Some error occured, please try again"))
+                    setPasswordChangeError(
+                      t("Some error occured, please try again")
+                    )
                   }
                 })
                 .run(oldPassword, newPassword)
@@ -269,6 +289,23 @@ export default function UserDetail({ match }) {
               closePasswordModal(false)
             }}
             onClosed={onPasswordModalClosed}
+          />
+        )}
+        {deleteModalMounted && (
+          <ConfirmUserDeleteModal
+            user={user}
+            isOpen={showDeleteModal}
+            onSubmit={() => {
+              remove
+                .onSuccess(() => {
+                  history.push("/users")
+                })
+                .run(user.id)
+            }}
+            onCancel={() => {
+              closeDeleteModal()
+            }}
+            onClosed={onDeleteModalClosed}
           />
         )}
       </Container>

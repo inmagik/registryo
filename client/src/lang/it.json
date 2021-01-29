@@ -46,5 +46,7 @@
   "Email sent correctly": "Email inviata correttamente",
   "Some error occured while sending email, please report this to your infrastructure manager": "Si è verificato un errore nell'invio della mail, contattare l'assistenza",
   "Password changed successfully": "Password modificata correttamente",
-  "Some error occured, please request again the password recovery. If problem persists, report to your infrastructure manager": "Si è verificato un errore, si prega di richiedere nuovamente la reimpostazione della password. Se il problema persiste, contattare l'assistenza."
+  "Some error occured, please request again the password recovery. If problem persists, report to your infrastructure manager": "Si è verificato un errore, si prega di richiedere nuovamente la reimpostazione della password. Se il problema persiste, contattare l'assistenza.",
+  "Delete user": "Elimina utente",
+  "deleteUserConfirm": "Sei sicuro di voler eliminare l'utente <1>{{username}}</1>? Questa operazione non è reversibile."
 }

@@ -71,6 +71,7 @@ def assert_scope(scope, user):
     if user.is_staff:
         actions_avaiable.add("*")
         actions_avaiable.add("pull")
+        actions_avaiable.add("push")
     for entry in (
         ACLEntry.objects.filter(Q(user=user) & Q(type=scope["type"]))
         .annotate(matches=RawSQL("%s GLOB name", (scope["name"],)))

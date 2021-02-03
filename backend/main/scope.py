@@ -76,3 +76,12 @@ def assert_scope(scope, user):
         for action in entry.actions.split(","):
             actions_avaiable.add(action.strip())
     return list(actions_required.intersection(actions_avaiable))
+
+
+def find_acl(repository):
+    return (
+        ACLEntry.objects
+        .annotate(matches=RawSQL("%s GLOB name", (repository,)))
+        .filter(matches=True)
+        .prefetch_related("user")
+    )

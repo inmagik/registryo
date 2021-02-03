@@ -40,7 +40,8 @@ export default function UsersList({ history }) {
                   <div className="mr-3">
                     <ColorfulUserIcon user={user} />
                   </div>
-                  {user.username}
+                  {user.first_name && user.last_name && [user.first_name, user.last_name].join(" ")}
+                  {!(user.first_name && user.last_name) && user.username}
                 </div>
               )
             })}

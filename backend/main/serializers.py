@@ -69,3 +69,14 @@ class PasswordResetSerializer(serializers.Serializer):
             return get_user_model().objects.get(pk=user)
         except get_user_model().DoesNotExist:
             raise serializers.ValidationError("Invalid token.")
+
+
+class RepositoryACLSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source="user.first_name")
+    last_name = serializers.CharField(source="user.last_name")
+    username = serializers.CharField(source="user.username")
+    email = serializers.EmailField(source="user.email")
+
+    class Meta:
+        model=ACLEntry
+        fields=("username", "email", "first_name", "last_name", "actions", )

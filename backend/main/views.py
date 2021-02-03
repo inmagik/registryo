@@ -1,6 +1,6 @@
 from django.db.models import query
 from django.http import response
-from main.scope import assert_scope, parse_scopes
+from main.scope import assert_scope, parse_scopes, find_acl
 from main.crypto import get_private_key, get_kid
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -23,6 +23,7 @@ from .serializers import (
     ChangePasswordSerializer,
     PasswordRecoverSerializer,
     PasswordResetSerializer,
+    RepositoryACLSerializer,
 )
 from .models import ACLEntry
 from django_filters.rest_framework import DjangoFilterBackend
@@ -246,7 +247,12 @@ class TagsView(APIView):
         response = requests.get(
             url, headers={"Authorization": f"Bearer {token}"}
         )
-        return Response(status=response.status_code, data=response.json())
+        acl = find_acl(repo_name)
+        out = {
+            **response.json(),
+            "acl": RepositoryACLSerializer(instance=acl, many=True).data
+        }
+        return Response(status=response.status_code, data=out)
 
 
 class ManifestView(APIView):

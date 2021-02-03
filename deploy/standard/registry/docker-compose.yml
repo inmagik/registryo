@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  registry-srv:
+    restart: always
+    image: registry:2
+    ports:
+      - 80:5000
+    volumes:
+      # persist uploaded images
+      - ./registry:/var/lib/registry
+      # share certificate file for token validation
+      - ./certfile.pem:/certfile.pem
+      # share configuration file
+      - ./config.yml:/etc/docker/registry/config.yml

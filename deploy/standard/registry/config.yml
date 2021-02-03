@@ -1,0 +1,24 @@
+version: 0.1
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    enabled: true
+http:
+  addr: :5000
+auth:
+  token:
+    realm: https://ui.registry.example.com/v1/auth/
+    service: registry.example.com
+    issuer: ui.registry.example.com
+    rootcertbundle: /certfile.pem
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3

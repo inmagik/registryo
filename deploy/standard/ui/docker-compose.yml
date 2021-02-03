@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  registry-web:
+    restart: always
+    image: docker_registry_web
+    env_file:
+      # Configuration file
+      - ./config.env
+    ports:
+      - 8080:80
+    volumes:
+      # Persist user db
+      - ./data:/data
+      # Share private key to sign tokens
+      - ./privkey.pem:/code/privkey.pem
+      # Share certificate file to verify tokens
+      - ./certfile.pem:/code/certfile.pem

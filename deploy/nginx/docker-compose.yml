@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  revproxy:
+    image: nginx:1.19.6
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+  registrysrv:
+    restart: always
+    image: registry:2
+    volumes:
+      # persist uploaded images
+      - ./registry:/var/lib/registry
+      # share certificate file for token validation
+      - ./certfile.pem:/certfile.pem
+      # share configuration file
+      - ./config.yml:/etc/docker/registry/config.yml
+
+  registryweb:
+    restart: always
+    image: registry.example.com/docker_registry_web
+    env_file:
+      # Configuration file
+      - ./config.env
+    volumes:
+      # Persist user db
+      - ./data:/data
+      # Share private key to sign tokens
+      - ./privkey.pem:/code/privkey.pem
+      # Share certificate file to verify tokens
+      - ./certfile.pem:/code/certfile.pem
+      - ./localsettings.py:/code/docker_registry_ui/localsettings.py
+

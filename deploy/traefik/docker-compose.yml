@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+
+  registry-srv:
+    restart: always
+    image: registry:2
+    volumes:
+      # persist uploaded images
+      - ./registry:/var/lib/registry
+      # share certificate file for token validation
+      - ./certfile.pem:/certfile.pem
+      # share configuration file
+      - ./config.yml:/etc/docker/registry/config.yml
+    networks:
+      - default
+      - traefik
+    labels:
+      # Use the "traefik" network talk to this container
+      - traefik.docker.network=traefik
+        # Define exposed services
+      - traefik.http.services.REGISTRY.loadbalancer.server.port=5000        # Forward traffic from outside to port 80
+      - traefik.http.services.REGISTRY.loadbalancer.server.scheme=http      # Forward traffic in http
+      - traefik.http.services.REGISTRY.loadbalancer.passhostheader=true     # Pass the HOST header along
+        # Define a routing rule that forwards http:// to https://
+      - traefik.http.routers.REGISTRY_HTTP.entrypoints=web
+      - traefik.http.routers.REGISTRY_HTTP.middlewares=redirect@file
+      - traefik.http.routers.REGISTRY_HTTP.rule=Host(`registry.example.com`) && PathPrefix(`/v2/`)
+      - traefik.http.routers.REGISTRY_HTTP.service=REGISTRY                       # Forward traffic to this service
+        # Define a routing rule for each service
+      - traefik.http.routers.REGISTRY_HTTPS.entrypoints=websecure                  # HTTPS only
+      - traefik.http.routers.REGISTRY_HTTPS.tls=true                               # Enable TLS
+      - traefik.http.routers.REGISTRY_HTTPS.tls.certresolver=letsencrypt           # Resolve cert for domain from letsencrypt
+      - traefik.http.routers.REGISTRY_HTTPS.rule=Host(`registry.example.com`) && PathPrefix(`/v2/`) # Host & Path matching rules
+      - traefik.http.routers.REGISTRY_HTTPS.service=REGISTRY                       # Forward traffic to this service
+
+  registry-web:
+    restart: always
+    image: registry.example.com/docker_registry_web
+    env_file:
+      # Configuration file
+      - ./config.env
+    volumes:
+      # Persist user db
+      - ./data:/data
+      # Share private key to sign tokens
+      - ./privkey.pem:/code/privkey.pem
+      # Share certificate file to verify tokens
+      - ./certfile.pem:/code/certfile.pem
+      - ./localsettings.py:/code/docker_registry_ui/localsettings.py
+    networks:
+      - default
+      - traefik
+    labels:
+      # Use the "traefik" network talk to this container
+      - traefik.docker.network=traefik
+        # Define exposed services
+      - traefik.http.services.REGISTRY_UI.loadbalancer.server.port=80          # Forward traffic from outside to port 80
+      - traefik.http.services.REGISTRY_UI.loadbalancer.server.scheme=http      # Forward traffic in http
+      - traefik.http.services.REGISTRY_UI.loadbalancer.passhostheader=true     # Pass the HOST header along
+        # Define a routing rule that forwards http:// to https://
+      - traefik.http.routers.REGISTRY_UI_HTTP.entrypoints=web
+      - traefik.http.routers.REGISTRY_UI_HTTP.middlewares=redirect@file
+      - traefik.http.routers.REGISTRY_UI_HTTP.rule=Host(`registry.example.com`)
+      - traefik.http.routers.REGISTRY_UI_HTTP.service=REGISTRY_UI                     # Forward traffic to this service
+        # Define a routing rule for each service
+      - traefik.http.routers.REGISTRY_UI_HTTPS.entrypoints=websecure                  # HTTPS only
+      - traefik.http.routers.REGISTRY_UI_HTTPS.tls=true                               # Enable TLS
+      - traefik.http.routers.REGISTRY_UI_HTTPS.tls.certresolver=letsencrypt           # Resolve cert for domain from letsencrypt
+      - traefik.http.routers.REGISTRY_UI_HTTPS.rule=Host(`registry.example.com`)          # Host & Path matching rules
+      - traefik.http.routers.REGISTRY_UI_HTTPS.service=REGISTRY_UI                    # Forward traffic to this service
+
+networks:
+  traefik:
+    external: true

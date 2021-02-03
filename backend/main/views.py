@@ -190,15 +190,10 @@ class GetTokenView(APIView):
     def post(self, request, *args, **kwargs):
         response_data = {}
 
-        print(request.META.get("HTTP_AUTHORIZATION", "----"))
-
         scopes = parse_scopes(request.data["scope"])
         response_data["access_token"] = emit_registry_token(
             scopes, request.user
         )
-
-        print(request.data)
-        print(response_data)
 
         return Response(
             status=200,

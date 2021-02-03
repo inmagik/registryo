@@ -175,8 +175,6 @@ FROM_EMAIL = os.environ.get("EMAIL_FROM", "NoReply <no-reply@example.com>")
 STATIC_ROOT = "/var/www/statik"
 STATIC_URL = "/statik/"
 
-print("Email driver: " + email_driver.lower())
-
 try:
     from .localsettings import *
 except ModuleNotFoundError as e:

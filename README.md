@@ -132,3 +132,23 @@ Create two directories (one for registry and one for the web ui), with those con
 Finally, we need to create the first user in the web ui. This user will be the *superadmin* of your installation, so choose credentials carefully.
 
 Move with the terminal in the directory where you put the web ui configuration files and run `docker-compose exec registry-web setup`, fill in the required information and you should be ready to access the web ui listening at `http://localhost:8080`! 
+
+## Other deployment setups
+
+In the `deploy` folder of this repository you can find some example configurations to deploy the registry and the authentication service in some common environments.
+
+- **standard**: dual host configuration, as described in this readme
+- **traefik**: single host with reverse proxy, using Traefik
+- **nginx**: single host with reverse proxy, using Nginx
+
+## Contributing
+
+Contributions are always welcome, given the conformance to the [code of conduct](https://github.com/inmagik/docker-registry-ui/blob/main/CODE_OF_CONDUCT.md).
+
+For instance, you may contribute by:
+
+- fixing bugs
+- adding new languages to the web interface
+- adding new common deployment configurations
+
+If you have some deployment configuration you wish to share, please remember to anonimize the FQDNs and DNSs entries. You can use `example.com` and subdomains to this extent. 

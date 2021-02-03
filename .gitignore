@@ -1,3 +1,4 @@
 data
 config.env
 build.sh
+.vscode/

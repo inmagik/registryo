@@ -69,9 +69,9 @@ services:
       # persist uploaded images
       - ./registry:/var/lib/registry
       # share certificate file for token validation
-      - /srv/registry/certfile.pem:/certfile.pem
+      - ./certfile.pem:/certfile.pem
       # share configuration file
-      - /srv/registry/config.yml:/etc/docker/registry/config.yml
+      - ./config.yml:/etc/docker/registry/config.yml
 
 ```
 
@@ -90,14 +90,14 @@ services:
       # Configuration file
       - ./config.env
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       # Persist user db
       - ./data:/data
       # Share private key to sign tokens
-      - ./backend/privkey.pem:/code/privkey.pem
+      - ./privkey.pem:/code/privkey.pem
       # Share certificate file to verify tokens
-      - ./backend/certfile.pem:/code/certfile.pem
+      - ./certfile.pem:/code/certfile.pem
 ```
 
 ```ini
@@ -126,3 +126,9 @@ EMAIL_SSL_CERTFILE=         # Set this only if needed
 # If you don't want emails
 EMAIL_BACKEND=none
 ```
+
+Create two directories (one for registry and one for the web ui), with those configuration files, then run `docker-compose up -d` in both directories.
+
+Finally, we need to create the first user in the web ui. This user will be the *superadmin* of your installation, so choose credentials carefully.
+
+Move with the terminal in the directory where you put the web ui configuration files and run `docker-compose exec registry-web setup`, fill in the required information and you should be ready to access the web ui listening at `http://localhost:8080`! 

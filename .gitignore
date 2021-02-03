@@ -3,3 +3,4 @@ config.env
 build.sh
 .vscode/
 !deploy/**/config.env
+.DS_Store

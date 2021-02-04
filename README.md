@@ -1,4 +1,4 @@
-# Docker Registry Web
+# DockBox
 
 Web UI and authentication service for private Docker Registry v2
 
@@ -85,7 +85,7 @@ services:
 
   registry-web:
     restart: always
-    image: docker_registry_web
+    image: dockbox
     env_file:
       # Configuration file
       - ./config.env

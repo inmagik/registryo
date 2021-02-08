@@ -99,12 +99,16 @@ class PayloadAuthentication(BaseAuthentication):
         if "grant_type" not in request.POST or request.POST["grant_type"] != "refresh_token":
             return None
 
-        claims = jwt.decode(
-            request.POST["refresh_token"],
-            get_public_key(),
-            algorithms=["RS256"],
-            audience=settings.JWT_REGISTRY_NAME
-        )
+        try:
+            claims = jwt.decode(
+                request.POST["refresh_token"],
+                get_public_key(),
+                algorithms=["RS256"],
+                audience=settings.JWT_REGISTRY_NAME
+            )
+        except Exception:
+            msg = _("Invalid token")
+            raise exceptions.AuthenticationFailed(msg)
 
         if claims.get("usage", "") != "refresh_token":
             msg = _("Invalid token.")

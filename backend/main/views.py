@@ -75,12 +75,13 @@ def emit_refresh_token(user):
     private_key = get_private_key()
 
     now = datetime.now()
+    exp = int((datetime.now() + timedelta(days=365)).timestamp())
     return jwt.encode(
         {
             "iss": settings.JWT_SERVER_FQDN,
             "sub": user.username,
             "aud": settings.JWT_REGISTRY_NAME,
-            "exp": int((datetime.now() + timedelta(seconds=3600)).timestamp()),
+            "exp": exp,
             "iat": int(now.timestamp()),
             "nbf": int(now.timestamp()),
             "jti": str(uuid.uuid4()),
@@ -90,7 +91,7 @@ def emit_refresh_token(user):
         private_key,
         algorithm="RS256",
         headers={"kid": get_kid()},
-    )
+    ), exp
 
 
 class MeView(APIView):
@@ -180,8 +181,9 @@ class GetTokenView(APIView):
             "offline_token" in request.query_params
             and request.query_params.get("offline_token") == "true"
         ):
-            response_data["token"] = emit_refresh_token(request.user)
-            response_data["refresh_token"] = emit_refresh_token(request.user)
+            token, expires = emit_refresh_token(request.user)
+            response_data["token"] = token
+            response_data["refresh_token"] = token
 
         return Response(
             status=200,

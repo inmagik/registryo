@@ -299,14 +299,15 @@ class ManifestView(APIView):
                 legacy_data = json.loads(
                     layer_info["v1Compatibility"]
                 )
+                cfg = legacy_data.get("container_config", legacy_data.get("config", {}))
                 digest = manifest_v1["fsLayers"][i]["blobSum"]
                 layer_data = {
                     "size": int(sizes.get(digest, 0)),
                     "digest": digest,
                     "command": ws_regex.sub(
-                        " ", " ".join(legacy_data["container_config"]["Cmd"])
+                        " ", " ".join(cfg.get("Cmd", []))
                     ),
-                    "ports": legacy_data["container_config"].get(
+                    "ports": cfg.get(
                         "ExposedPorts", {}
                     ),
                     "created": legacy_data["created"],

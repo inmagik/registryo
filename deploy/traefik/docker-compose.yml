@@ -36,7 +36,7 @@ services:
 
   registry-web:
     restart: always
-    image: registry.example.com/docker_registry_web
+    image: inmagik/registryo
     env_file:
       # Configuration file
       - ./config.env

@@ -1,4 +1,4 @@
-# DockBox
+# Registryo
 
 Web UI and authentication service for private Docker Registry v2
 
@@ -85,7 +85,7 @@ services:
 
   registry-web:
     restart: always
-    image: dockbox
+    image: inmagik/registryo:latest
     env_file:
       # Configuration file
       - ./config.env

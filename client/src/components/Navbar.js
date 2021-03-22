@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <BsNavbar fixed="top" variant="dark" bg="dark" expand="md">
       <BsNavbar.Brand as={Link} to="/">
-        DockBox
+        Registryo
       </BsNavbar.Brand>
       <BsNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BsNavbar.Collapse id="basic-navbar-nav">

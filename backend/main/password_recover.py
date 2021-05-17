@@ -37,10 +37,12 @@ def send_password_reset_email(user):
 
     token = emit_password_recovery_token(user)
 
+    link = f"https://{settings.JWT_SERVER_FQDN}/password-reset/{token}"
+
     template_text = loader.get_template('main/reset_password.txt')
     template_html = loader.get_template('main/reset_password.html')
     context = {
-        'token': token,
+        'link': link,
         'user': user,
     }
 

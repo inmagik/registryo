@@ -4,3 +4,7 @@ build.sh
 .vscode/
 !deploy/**/config.env
 .DS_Store
+backend/.python-version
+backend/.data
+backend/docker-compose.yml
+backend/config.yml

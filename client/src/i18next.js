@@ -3,6 +3,7 @@ import { initReactI18next } from "react-i18next"
 
 import LanguageDetector from "i18next-browser-languagedetector"
 import itLang from "./lang/it"
+import enLang from "./lang/en"
 
 i18n
   // detect user language
@@ -22,5 +23,6 @@ i18n
   })
 
 i18n.addResources("it", "translation", itLang)
+i18n.addResources("en", "translation", enLang)
 
 export default i18n

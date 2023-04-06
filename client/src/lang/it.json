@@ -51,5 +51,8 @@
   "deleteUserConfirm": "Sei sicuro di voler eliminare l'utente <1>{{username}}</1>? Questa operazione non è reversibile.",
   "adminRoleExplanation": "L'accesso amministrativo consente la gestione degli utenti e l'esplorazione dell'intero contenuto del registry indipendentemente dai permessi assegnati. Le operazioni di pull e push invece richiedono l'esplicita assegnazione di un permesso, anche in caso di utenti amministrativi",
   "Tags": "Tag",
-  "users-have-rights-on-repo": "I seguenti utenti possono eseguire azioni su questo repository"
+  "users-have-rights-on-repo": "I seguenti utenti possono eseguire azioni su questo repository",
+  "no-tag-found": "Nessun tag disponibile",
+  "delete": "Elimina",
+  "delete-tag": "Vuoi davvero eliminare il tag \"{{tag}}\"? Questa operazione non è reversibile"
 }

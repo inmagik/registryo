@@ -43,6 +43,9 @@ export default function RepoDetails({ history, match }) {
                 </div>
               )
             })}
+            {tags.tags.length === 0 && (
+              <p><i>{t("no-tag-found")}</i></p>
+            )}
             <h3>{t("Users")}</h3>
             <p>
               <Trans t={t} i18nKey="users-have-rights-on-repo">

@@ -249,9 +249,11 @@ class TagsView(APIView):
         response = requests.get(
             url, headers={"Authorization": f"Bearer {token}"}
         )
+        data = response.json()
         acl = find_acl(repo_name)
         out = {
-            **response.json(),
+            "name": data["name"],
+            "tags": data["tags"] or [],
             "acl": RepositoryACLSerializer(instance=acl, many=True).data
         }
         return Response(status=response.status_code, data=out)
@@ -322,8 +324,29 @@ class ManifestView(APIView):
                     "size": sum([item["size"] for item in layers]),
                     "created": max([item["created"] for item in layers]),
                     "v2": manifest_v2,
-                    "v1": manifest_v1
+                    "v1": manifest_v1,
+                    "digest": response_v2.headers.get("Docker-Content-Digest")
                 },
             )
         else:
             return Response(status=404, data={})
+        
+    def delete(self, request, repo_name=None, ref_name=None, *args, **kwargs):
+        url = f"{settings.JWT_REGISTRY_URL}/{repo_name}/manifests/{ref_name}"
+        token_v2 = emit_registry_token(
+            [{"type": "repository", "name": repo_name, "actions": ["delete"]}],
+            request.user,
+            skip_check=request.user.is_staff
+        )
+        response_v2 = requests.delete(
+            url,
+            headers={
+                "Authorization": f"Bearer {token_v2}",
+                "Accept": "application/vnd.docker.distribution.manifest.v2+json",
+            },
+        )
+        print(response_v2.text)
+        if response_v2.status_code < 400:
+            return Response(status=202)
+        else:
+            return Response(status=404)

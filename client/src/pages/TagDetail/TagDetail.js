@@ -1,9 +1,10 @@
 import React from "react"
 import Navbar from "../../components/Navbar"
-import useManifest from "../../hooks/useManifest"
+import useManifest, { useDeleteManifest } from "../../hooks/useManifest"
 import Container from "react-bootstrap/Container"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
+import { Button, Col, Row } from "react-bootstrap"
 
 function formatSize(bytes) {
   if (bytes < 1000) {
@@ -18,24 +19,51 @@ function formatSize(bytes) {
   return (bytes / 1000 ** 4).toFixed(2) + " TB"
 }
 
-export default function TagDetail({ match }) {
+export default function TagDetail({ history, match }) {
   const repoName = match.params.repoName
   const refName = match.params.refName
 
   const [{ data: manifest }] = useManifest(repoName, refName)
+  const [, { run: deleteManifest }] = useDeleteManifest()
   const { t } = useTranslation()
 
   return (
     <>
       <Navbar />
       <Container style={{ paddingTop: 100 }}>
-        <h1>
-          {repoName}:{refName}
-        </h1>
+        <Row>
+          <Col>
+            <h1>
+              {repoName}:{refName}
+            </h1>
+          </Col>
+          <Col className="d-flex flex-row justify-content-end align-items-center">
+            <Button
+              variant="danger"
+              onClick={() => {
+                const check = window.confirm(t("delete-tag", { tag: repoName + ":" + refName }))
+                if (check) {
+                  deleteManifest
+                    .onSuccess(() => {
+                      history.goBack()
+                    })
+                    .run(repoName, manifest.digest)
+                }
+              }}
+            >
+              {t("delete")}
+            </Button>
+          </Col>
+        </Row>
         {manifest && (
           <div>
             <p className="h3">{t("Info")}</p>
-            <Table striped bordered size="sm" style={{ tableLayout: "fixed" }}>
+            <Table
+              striped
+              bordered
+              size="sm"
+              style={{ tableLayout: "fixed" }}
+            >
               <tbody>
                 <tr>
                   <td>{t("Number of layers")}</td>
@@ -60,12 +88,16 @@ export default function TagDetail({ match }) {
               </tbody>
             </Table>
             <p className="h3">{t("Build history")}</p>
-            <Table striped className="w-100">
+            <Table
+              striped
+              className="w-100"
+              style={{ maxWidth: "100%", tableLayout: "fixed" }}
+            >
               <thead>
                 <tr>
-                  <th>{t("Id")}</th>
-                  <th>{t("Command")}</th>
-                  <th>{t("Size")}</th>
+                  <th style={{ width: "20%" }}>{t("Id")}</th>
+                  <th style={{ width: "60%" }}>{t("Command")}</th>
+                  <th style={{ width: "20%" }}>{t("Size")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,9 +111,7 @@ export default function TagDetail({ match }) {
                         </span>
                       </td>
                       <td>
-                        <code style={{ whiteSpace: "pre-wrap" }}>
-                          {cmd}
-                        </code>
+                        <code style={{ whiteSpace: "pre-wrap" }}>{cmd}</code>
                       </td>
                       <td className="text-right">{formatSize(entry.size)}</td>
                     </tr>

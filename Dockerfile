@@ -1,4 +1,4 @@
-FROM python:3.8.5-alpine
+FROM python:3.11.1-alpine
 
 ADD ./client/build /var/www
 ADD ./backend /code
@@ -18,7 +18,7 @@ RUN pip install --upgrade pip \
 ADD ./prod/start.sh /scripts/start.sh
 ADD ./prod/setup.sh /scripts/bin/setup
 ADD ./prod/localsettings.py /code/docker_registry_ui/localsettings.py
-ADD ./prod/nginx.conf /etc/nginx/conf.d/default.conf
+ADD ./prod/nginx.conf /etc/nginx/http.d/default.conf
 
 ENV PATH="/scripts/bin:${PATH}"
 CMD ["sh", "/scripts/start.sh"]

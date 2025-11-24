@@ -146,7 +146,7 @@ JWT_KEY_FILE = os.environ.get(
 JWT_SERVER_FQDN = os.environ.get("SERVER_FQDN", "auth.example.com")
 JWT_REGISTRY_NAME = os.environ.get("REGISTRY_NAME", "registry.example.com")
 JWT_REGISTRY_URL = os.environ.get(
-    "REGISTRY_URL", "https://registry.example.com/v2"
+    "REGISTRY_URL", "https://registry.example.com"
 )
 
 # Mail configuration
@@ -175,7 +175,9 @@ FROM_EMAIL = os.environ.get("EMAIL_FROM", "NoReply <no-reply@example.com>")
 STATIC_ROOT = "/var/www/statik"
 STATIC_URL = "/statik/"
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 try:
-    from .localsettings import *
+    from .localsettings import *  # type: ignore
 except ModuleNotFoundError as e:
     pass

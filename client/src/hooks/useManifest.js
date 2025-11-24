@@ -22,3 +22,14 @@ const DeleteManifestRj = rj({
 export function useDeleteManifest() {
   return useRj(DeleteManifestRj)
 }
+
+const DeleteBlobRj = rj({
+  effectCaller: rj.configured(),
+  effect: (token) => (repoName, refName) => {
+    return api.auth(token).delete(`/registry/${repoName}/blobs/${refName}/`)
+  },
+})
+
+export function useDeleteBlob() {
+  return useRj(DeleteBlobRj)
+}

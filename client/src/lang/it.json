@@ -54,5 +54,9 @@
   "users-have-rights-on-repo": "I seguenti utenti possono eseguire azioni su questo repository",
   "no-tag-found": "Nessun tag disponibile",
   "delete": "Elimina",
-  "delete-tag": "Vuoi davvero eliminare il tag \"{{tag}}\"? Questa operazione non è reversibile"
+  "delete-tag": "Vuoi davvero eliminare il tag \"{{tag}}\"? Questa operazione non è reversibile",
+  "delete-blob": "Vuoi davvero eliminare il blob \"{{blob}}\"? Questa operazione non è reversibile",
+  "blob-deleted": "Blob eliminato correttamente",
+  "all-platforms": "Tutte le piattaforme",
+  "manifest-fetch-error": "Impossibile recuperare il manifest. È possibile che non esista o che sia codificato in un formato non supportato o legacy."
 }

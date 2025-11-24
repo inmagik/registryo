@@ -54,5 +54,9 @@
   "users-have-rights-on-repo": "The following users can perform actions on this repository",
   "no-tag-found": "No tag available",
   "delete": "Delete",
-  "delete-tag": "Do you really want to delete the \"{{tag}}\" tag? This operation is not reversible"
+  "delete-tag": "Do you really want to delete the \"{{tag}}\" tag? This operation is not reversible",
+  "delete-blob": "Do you really want to delete the blob \"{{blob}}\"? This operation is not reversible",
+  "blob-deleted": "Blob deleted successfully",
+  "all-platforms": "All platforms",
+  "manifest-fetch-error": "Failed to fetch manifest. It is possible that the manifest does not exists or that it is encoded in an unsupported or legacy format."
 }

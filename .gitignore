@@ -8,3 +8,4 @@ backend/.python-version
 backend/.data
 backend/docker-compose.yml
 backend/config.yml
+client-old

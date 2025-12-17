@@ -1,6 +1,6 @@
 FROM python:3.11.1-alpine
 
-ADD ./client/build /var/www
+ADD ./client/dist /var/www
 ADD ./backend /code
 
 RUN pip install --upgrade pip \

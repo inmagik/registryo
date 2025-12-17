@@ -31,5 +31,5 @@ urlpatterns = router.urls + [
     path("registry/catalog/", CatalogView.as_view()),
     path("registry/<path:repo_name>/tags/list/", TagsView.as_view()),
     path("registry/<path:repo_name>/manifests/<ref_name>/", ManifestView.as_view()),
-    path("registry/<path:repo_name>/blobs/<path:blob_digest>/", DeleteLayerView.as_view()),
+    path("registry/<path:repo_name>/blobs/<path:digest>/", DeleteLayerView.as_view()),
 ]
